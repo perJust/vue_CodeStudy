@@ -1,0 +1,29 @@
+{
+  "name": "vue_code_study",
+  "version": "1.0.0",
+  "description": "开始从零手敲，实现vue基本源码",
+  "main": "index.js",
+  "scripts": {
+    "build": "rollup -c",
+    "serve": "cross-env ENV=development rollup -c -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/perJust/vue_CodeStudy.git"
+  },
+  "keywords": [],
+  "author": "perJust",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/perJust/vue_CodeStudy/issues"
+  },
+  "homepage": "https://github.com/perJust/vue_CodeStudy#readme",
+  "devDependencies": {
+    "@babel/core": "7.9.0",
+    "@babel/preset-env": "7.9.5",
+    "cross-env": "^7.0.2",
+    "rollup": "2.6.1",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-serve": "^1.0.1"
+  }
+}

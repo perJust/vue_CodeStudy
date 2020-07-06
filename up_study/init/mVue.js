@@ -4,8 +4,10 @@
 
  class mVue {
     constructor(opt) {
+        this.$vm = this;
+        this.$option = opt;
         
     }
  }
 
- export default mVue
+//  export default mVue
