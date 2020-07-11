@@ -1,3 +1,4 @@
+import { observe } from './observe/index.js';
 export function initState(vm) {
     const opts = vm.$options;
     // 细分各个选项的初始化
@@ -25,7 +26,13 @@ function initMethods(vm) {
 
 }
 function initData(vm) {
-    console.log(vm.$options)
+    // console.log(vm.$options)
+    let data = vm.$options.data;
+    data = typeof data === 'function'?data.call(vm):data;
+    vm._data = data; // 挂载在this上
+
+    // 对象劫持
+    observe(data);
 }
 function initComputed(vm) {
 
