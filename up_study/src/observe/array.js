@@ -44,4 +44,3 @@ methods.forEach(method => {
         return result;
     }
 });
-console.log(arrayMethods);

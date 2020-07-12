@@ -95,7 +95,6 @@
       return result;
     };
   });
-  console.log(arrayMethods);
 
   function observe(data) {
     if (!isObject(data)) {
@@ -201,6 +200,28 @@
 
       initState(vm); // 进行数据劫持
       // this.observe(options.data)
+
+      if (vm.$options.el) {
+        vm.$mount(vm.$options.el);
+      }
+    };
+
+    mVue.prototype.$mount = function (el) {
+      var vm = this;
+      var options = vm.$options;
+      el = document.querySelector(el); // 一般过程：先查看是否写了render，然后是template，最后是用el
+
+      if (options.render) ; else {
+        // 如果是用template方式
+        var template = options.template;
+
+        if (!template && el) {
+          // 如果没有template选项  但是有el
+          template = el.outerHTML; // 则template指向el及el内的所有元素
+        }
+
+        console.log(template);
+      }
     };
   }
 

@@ -11,6 +11,12 @@
     <title>vue的学习</title>
 </head>
 <body>
+    <div id="app">
+        <p>{{ info.name }}</p>
+        <p m-text="info.age"></p>
+        <input type="text" m-model="hg"/>
+        <button @click="changeVal">改变</button>
+    </div>
     <script src="/dist/umd/mVue.js" type="text/javascript"></script>
     <script>
         const vm = new mVue({
@@ -18,14 +24,18 @@
             data() {
                 return {
                     a: [{name: 1}],
-                    b: {c: 123}
+                    info: {name: 'admin', age: 18},
+                    hg: ''
                 }
             },
             mounted() {
 
             },
             methods: {
-                
+                changeVal(val) {
+                    console.log('changeVal:', val);
+                    
+                }
             },
         })
 
