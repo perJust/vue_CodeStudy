@@ -191,6 +191,11 @@
     observe(data);
   }
 
+  // 模板编译
+  var Compile = function Compile(el, vm) {
+    _classCallCheck(this, Compile);
+  };
+
   // 混入init方法
   function initMixin(mVue) {
     mVue.prototype._init = function (options) {
@@ -209,18 +214,21 @@
     mVue.prototype.$mount = function (el) {
       var vm = this;
       var options = vm.$options;
-      el = document.querySelector(el); // 一般过程：先查看是否写了render，然后是template，最后是用el
+      var elDom = document.querySelector(el); // 一般过程：先查看是否写了render，然后是template，最后是用el
 
       if (options.render) ; else {
         // 如果是用template方式
         var template = options.template;
 
-        if (!template && el) {
+        if (!template && elDom) {
           // 如果没有template选项  但是有el
-          template = el.outerHTML; // 则template指向el及el内的所有元素
-        }
+          template = elDom.outerHTML; // 则template指向el及el内的所有元素
+        } // console.log(template);
+        // 这里template用正则匹配的方式 将字符串 进行解析成AST树
+        // 上面的方式暂时不考虑  先只考虑el挂载的方式的简单写法
 
-        console.log(template);
+
+        new Compile();
       }
     };
   }

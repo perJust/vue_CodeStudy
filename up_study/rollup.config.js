@@ -20,7 +20,7 @@ export default {
             runtimeHelpers: true // 配置runtime
         }),
         process.env.ENV === "development"?serve({
-            open: true,
+            open: false,
             openPage: "/public/index.html",
             port: 3000,
             contentBase: "",    // 静态路径

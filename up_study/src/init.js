@@ -1,6 +1,7 @@
 // 混入init方法
 
 import {initState} from './state.js';
+import Compile from './compile/index.js';
 export function initMixin(mVue) {
     mVue.prototype._init = function (options) {
         // console.log(options)
@@ -19,7 +20,7 @@ export function initMixin(mVue) {
     mVue.prototype.$mount = function (el) {
         const vm = this;
         const options = vm.$options;
-        el = document.querySelector(el);
+        let elDom = document.querySelector(el);
 
         // 一般过程：先查看是否写了render，然后是template，最后是用el
         if(options.render) { // 如果是用render函数方式
@@ -27,11 +28,16 @@ export function initMixin(mVue) {
         
         } else { // 如果是用template方式
             let template = options.template;
-            if(!template && el) {   // 如果没有template选项  但是有el
-                template = el.outerHTML;    // 则template指向el及el内的所有元素
+            if(!template && elDom) {   // 如果没有template选项  但是有el
+                template = elDom.outerHTML;    // 则template指向el及el内的所有元素
             }
-            console.log(template);
+            // console.log(template);
+            // 这里template用正则匹配的方式 将字符串 进行解析成AST树
             
+            // 上面的方式暂时不考虑  先只考虑el挂载的方式的简单写法
+            
+            new Compile(el, this)
+
         }
 
     }
