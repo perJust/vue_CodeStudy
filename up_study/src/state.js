@@ -29,10 +29,10 @@ function initData(vm) {
     // console.log(vm.$options)
     let data = vm.$options.data;
     data = typeof data === 'function'?data.call(vm):data;
-    vm._data = data; // 挂载在this上
+    vm.$data = data; // 挂载在this上
 
     // 对象劫持
-    observe(data);
+    observe(data, vm);
 }
 function initComputed(vm) {
 

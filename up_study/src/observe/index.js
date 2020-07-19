@@ -1,14 +1,15 @@
 import { isObject, def } from '../utils/index.js';
 import { arrayMethods } from './array.js';
-export function observe(data) {
+export function observe(data, vm) {
     if(!isObject(data)) {
         return ;
     }
-    return new Observer(data);
+    return new Observer(data, vm);
 }
 
 class Observer {
-    constructor(data) {
+    constructor(data, vm) {
+        this.vm = vm;
         //  将this存向数据的_ob_上
         // data._ob_ = this;   这样写有问题，walk时会无限循环了
         def(data, '__ob__', this);    // 改用Object.defineProperty定义不可枚举与再配置
@@ -32,7 +33,19 @@ class Observer {
         let keys = Object.keys(data);
         for(let itemKey of keys) {
             defineReactive(data, itemKey, data[itemKey]);
+            this.proxyData(itemkey);    // 代理到this上
         }
+    }
+    proxyData(key) {    // 代理this.$data[key]的数据  直接代理到 this[key]
+        // 原mVue的this是当前的this.vm;
+        Object.defineProperty(this.vm, key, {
+            get() {
+                return this.vm.$data[key];
+            },
+            set(newVal) {
+                this.vm.$data[key] = newVal;
+            }
+        })
     }
 }
 

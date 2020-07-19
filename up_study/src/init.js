@@ -34,7 +34,7 @@ export function initMixin(mVue) {
             // console.log(template);
             // 这里template用正则匹配的方式 将字符串 进行解析成AST树
             
-            // 上面的方式暂时不考虑  先只考虑el挂载的方式的简单写法
+            // 上面的方式暂时不考虑  先只考虑el挂载的方式的简单写法     且不考虑VDOM
             
             new Compile(el, this)
 
