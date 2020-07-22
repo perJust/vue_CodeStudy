@@ -1,15 +1,18 @@
 import { isObject, def } from '../utils/index.js';
 import { arrayMethods } from './array.js';
-export function observe(data, vm) {
+import { Dep } from '../watcher/index.js';
+export function observe(data, that) {
     if(!isObject(data)) {
         return ;
     }
-    return new Observer(data, vm);
+    if(that) {
+        vm = that;
+    }
+    return new Observer(data);
 }
-
+var vm = null;
 class Observer {
-    constructor(data, vm) {
-        this.vm = vm;
+    constructor(data) {
         //  将this存向数据的_ob_上
         // data._ob_ = this;   这样写有问题，walk时会无限循环了
         def(data, '__ob__', this);    // 改用Object.defineProperty定义不可枚举与再配置
@@ -33,17 +36,20 @@ class Observer {
         let keys = Object.keys(data);
         for(let itemKey of keys) {
             defineReactive(data, itemKey, data[itemKey]);
-            this.proxyData(itemkey);    // 代理到this上
+            this.proxyData(itemKey);    // 代理到this上
         }
     }
     proxyData(key) {    // 代理this.$data[key]的数据  直接代理到 this[key]
         // 原mVue的this是当前的this.vm;
-        Object.defineProperty(this.vm, key, {
+        if(vm.hasOwnProperty(key)) {
+            return ;
+        }
+        Object.defineProperty(vm, key, {
             get() {
-                return this.vm.$data[key];
+                return vm.$data[key];
             },
             set(newVal) {
-                this.vm.$data[key] = newVal;
+                vm.$data[key] = newVal;
             }
         })
     }
@@ -51,10 +57,12 @@ class Observer {
 
 function defineReactive(data, key, value) {
     observe(value);
+    let dep = new Dep();
     Object.defineProperty(data, key, {
         configurable: true,
         enumerable: false,
         get() {
+            Dep.target && dep.addDep(Dep.target);
             return value;
         },
         set(newVal) {
@@ -63,6 +71,7 @@ function defineReactive(data, key, value) {
             }
             observe(newVal); // 如果设置的是对象  继续劫持新设置的值
             value = newVal;
+            dep.notify();   // 这里有个坑：之前将这行代码放到value = newVal之前，使得当即获取的改变还是之前的值
         }
     })
 }

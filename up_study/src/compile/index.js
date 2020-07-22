@@ -2,6 +2,7 @@ import { Watcher } from '../watcher/index.js';
 // 模板编译
 export default class Compile {
     constructor(el, vm) {
+        this.$vm = vm;
         this.$el = document.querySelector(el);
 
         if(this.$el) {
@@ -31,7 +32,7 @@ export default class Compile {
                     }
                 })
             } else if(this.isInterpolation(node)) { // 判断是文本且为插值
-                this.compileText(node); // 编译插值文本
+                this.compileText(node, RegExp.$1); // 编译插值文本
             }
             // 递归子节点
             if(node.childNodes && node.childNodes.length > 0) {
@@ -48,16 +49,16 @@ export default class Compile {
         }
         return frag;
     }
-    compileText(node) {
+    compileText(node, exp) {
         // RegExp.$1未处理 暂不允许前后空格
         // 可处理方式：let exp = RegExp.$1.trim();
-        this.update(node, this.$vm, RegExp.$1, 'text'); // 将匹配到的插值进行绑定
+        this.update(node, this.$vm, exp, 'text'); // 将匹配到的插值进行绑定
     }
     isElement(node) {
         return node.nodeType === 1;
     }
     isInterpolation(node) {
-        return node.nodeType === 1 && /\{\{(.*)\}\}/.test(node.textContent);
+        return node.nodeType === 3 && /\{\{(.*)\}\}/.test(node.textContent);
     }
     eventHandler(node, vm, exp, dir) {
         let fn = vm.$options.methods && vm.$options.methods[exp];
@@ -65,12 +66,12 @@ export default class Compile {
             node.addEventListener(dir, fn.bind(vm));
         }
     }
-    update(node, vm, exp) {
-        const updaterFn = this[dir + 'updater'];    // 执行对应的指令更新
-        updaterFn && updaterFn(node, vm[exp]);
+    update(node, vm, exp, dir) {
+        const updaterFn = this[dir + 'Updater'];    // 执行对应的指令更新
+        updaterFn && updaterFn(node, vm[exp]);  // 给初始值
         // 依赖收集
         new Watcher(vm, exp, function (value) {
-            updaterFn && updaterFn(node, vm[exp]);
+            updaterFn && updaterFn(node, value);
         })
     }
     textUpdater(node, value) {

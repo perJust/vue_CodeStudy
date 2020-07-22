@@ -12,8 +12,9 @@
 </head>
 <body>
     <div id="app">
-        <p>{{ info.name }}</p>
-        <p m-text="info.age"></p>
+        <!-- <p>{{ info.name }}</p>
+        <p m-text="info.age"></p> -->
+        <p>{{hg}}</p>
         <input type="text" m-model="hg"/>
         <button @click="changeVal">改变</button>
     </div>
@@ -25,7 +26,7 @@
                 return {
                     a: [{name: 1}],
                     info: {name: 'admin', age: 18},
-                    hg: ''
+                    hg: '123'
                 }
             },
             mounted() {
@@ -34,13 +35,12 @@
             methods: {
                 changeVal(val) {
                     console.log('changeVal:', val);
-                    
+                    this.hg = 111;
                 }
             },
         })
 
-        vm._data.a.push({age: 18});
-        console.log(vm._data);
+        vm.$data.a.push({age: 18});
         
     </script>
 </body>
