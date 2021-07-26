@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue原理学习</title>
+</head>
+<body>
+    <div id="app">
+        <p>{{name}}</p>
+        <p k-text="name"></p>
+        <p>{{age}}</p>
+        <p>{{doubleAge}}</p>
+        <input type="text" k-model="name">
+        <button @click="changeName">点击</button>
+        <div k-html="html"></div>
+    </div>
+    <script src="./compile.js?_s=123123"></script>
+    <script src="./kvue.js?_h=123"></script>
+    <script> 
+        const app = new KVue({
+            el: '#app',
+            data: {
+                name: 'test',
+                age: 12,
+                html: '<button>新增按钮</button>'
+            },
+            created() {
+                console.log('开始')
+                setTimeout(()=>{
+                    this.name = 'created内异步改变的name'
+                })
+            },
+            methods: {
+                changeName(){
+                    this.name = 'methods内改变的name'
+                    this.age = 18
+                }
+            },
+        })
+        app.$data.test =23
+    </script>
+</body>
+</html>
